@@ -2,11 +2,13 @@
 
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
-header('Access-Control-Allow-Methods: POST');
+header('Access-Control-Allow-Methods: PUT');
 header('Allow-Access-Coltrol-Allow-Headers: Allow-Access-Coltrol-Allow-Headers, Content-Type, Access-Control-Allow-Methods, Authorizaton, X-Requested-With');
 
-require_once '../../config/Database.php';
-require_once '../../models/Post.php';
+include("../../autoload.php");
+
+use Models\Post;
+use config\Database;
 
 // Instantitate DB & connect 
 $database = new Database();
@@ -19,17 +21,21 @@ $post = new Post($db);
 
 $data = json_decode(file_get_contents("php://input"));
 
+
+// id 
+$post->id = $data->id;
+
 $post->title = $data->title;
 $post->body = $data->body;
 $post->author = $data->author;
 $post->category_id = $data->category_id;
 
-if($post->create()) {
+if($post->update()) {
     echo json_encode([
-        'message' => 'post created'
+        'message' => 'post updated'
     ]);
 } else {
     echo json_encode([
-        'message' => 'post not created'
+        'message' => 'post not updated'
     ]);
 };
