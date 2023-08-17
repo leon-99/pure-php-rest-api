@@ -47,4 +47,34 @@ class Post {
 
         return $statement;
     }
+
+    // create post
+    public function create() 
+    {
+      $query = "INSERT INTO {$this->table} SET
+        title = :title,
+        body = :body,
+        author = :author,
+        category_id = :category_id
+      ";
+
+      $statement = $this->conn->prepare($query);
+
+      $this->title = htmlspecialchars(strip_tags($this->title));
+      $this->body = htmlspecialchars(strip_tags($this->body));
+      $this->author = htmlspecialchars(strip_tags($this->author));
+      $this->category_id = htmlspecialchars(strip_tags($this->category_id));
+
+      if($statement->execute([
+        'title' => $this->title,
+        'body' => $this->body,
+        'author' => $this->author,
+        'category_id' => $this->category_id
+      ])) {
+        return true;
+      } else {
+        printf("Error: %s. /n", $statement->error);
+        return false;
+      }
+    }
 }

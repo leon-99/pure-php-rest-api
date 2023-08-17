@@ -3,10 +3,8 @@
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
 
-include_once '../../config/Database.php';
-include_once '../../models/Post.php';
-
-
+require_once '../../config/Database.php';
+require_once '../../models/Post.php';
 
 // Instantitate DB & connect 
 $database = new Database();
@@ -15,7 +13,7 @@ $db = $database->connect();
 // Instantitate blog post object
 $post = new Post($db);
 
-$post->id = isset($_GET['id']) ? $_GET['id']: die();
+$post->id = isset($_GET['id']) ? $_GET['id']: abort(404);
 
 $result = $post->get();
 $rowCount = $result->rowCount();
